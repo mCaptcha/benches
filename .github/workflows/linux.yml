@@ -31,7 +31,7 @@ jobs:
       - name: Build
         run: make
 
-      - name: Deploy Docuemntation to GitHub Pages
+      - name: Deploy website to GitHub Pages
         if: github.repository == 'mCaptcha/benches'
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
