@@ -3524,7 +3524,7 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-mcaptcha-browser@../mCaptcha/browser/pkg/:
+mcaptcha-browser@./vendor/pow/:
   version "0.1.0"
 
 media-typer@0.3.0:
