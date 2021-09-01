@@ -10,20 +10,12 @@
  */
 import {gen_pow} from 'mcaptcha-browser';
 
-const s = document.getElementById('status');
-
 type PoWConfig = {
   string: string;
   difficulty_factor: number;
   salt: string;
 };
 
-export type Work = {
-  result: string;
-  nonce: number;
-  string: string;
-  key: string;
-};
 const FACTOR = 500000;
 const SALT = '674243647f1c355da8607a8cdda05120d79ca5d1af8b3b49359d056a0a82';
 const PHRASE = '6e2a53dbc7d307970d7ba3c0000221722cb74f1c325137251ce8fa5c2240';
@@ -41,15 +33,49 @@ type Perf = {
 
 const res: Array<Perf> = [];
 
-const addResult = (difficulty: any, time: any) => {
-  const element = document.createElement('p');
-  const text = document.createTextNode(
-    `difficulty: ${difficulty} time: ${time}`,
-  );
-  element.appendChild(text);
-  document.body.appendChild(element);
+const stats = document.getElementById('stats');
+
+const addResult = (difficulty: Number, time: Number) => {
+  const row = document.createElement('tr');
+  row.className = 'data';
+  const diff = document.createElement('td');
+  diff.innerHTML = difficulty.toString();
+  const duration = document.createElement('td');
+  duration.innerHTML = time.toString();
+
+  row.appendChild(diff);
+  row.appendChild(duration);
+
+  stats.appendChild(row);
 
   res.push({difficulty, time});
+};
+
+const addDeviceInfo = () => {
+  const INFO = {
+    threads: window.navigator.hardwareConcurrency,
+    oscup: window.navigator.userAgent,
+  };
+
+  console.log(res);
+  console.log(INFO);
+
+  const element = document.createElement('div');
+  const ua = document.createElement('b');
+  ua.innerText = 'User Agent: ';
+  const os = document.createTextNode(`${INFO.oscup}`);
+
+  const threads = document.createElement('b');
+  threads.innerText = 'Hardware concurrency: ';
+  const threadsText = document.createTextNode(`${INFO.threads}`);
+
+  element.appendChild(ua);
+  element.appendChild(os);
+  element.appendChild(document.createElement('br'));
+  element.appendChild(threads);
+  element.appendChild(threadsText);
+
+  document.getElementById('device-info').appendChild(element);
 };
 
 for (let i = 1; i < 10; i++) {
@@ -64,14 +90,7 @@ for (let i = 1; i < 10; i++) {
   addResult(difficulty_factor, time);
 }
 
-const INFO = {
-  threads: window.navigator.hardwareConcurrency,
-  oscup: window.navigator.userAgent,
-};
+addDeviceInfo();
 
-console.log(res);
-console.log(INFO);
-
-addResult(INFO.oscup, INFO.threads);
-
+const s = document.getElementById('status');
 s.innerHTML = 'Benchmark finished';
