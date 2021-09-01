@@ -69,11 +69,18 @@ const run = (e: Event) => {
   document.getElementById('bench').style.display = 'flex';
 
   const iterations = 9;
+
+  const counterElement = document.getElementById('counter');
+  counterElement.innerText = `${iterations} more to go`;
+
   worker.onmessage = (event: MessageEvent) => {
     let data: Perf = event.data;
     addResult(data);
     if (res.length == iterations) {
       finished();
+      counterElement.innerText = `All Done!`;
+    } else {
+      counterElement.innerText = `${iterations - res.length} more to go`;
     }
   };
 
