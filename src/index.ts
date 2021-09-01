@@ -8,47 +8,27 @@
  * this program. If not, see <https://spdx.org/licenses/MIT.html> for
  * MIT or <http://www.apache.org/licenses/LICENSE-2.0> for Apache.
  */
-import {gen_pow} from 'mcaptcha-browser';
-
-type PoWConfig = {
-  string: string;
-  difficulty_factor: number;
-  salt: string;
-};
+import {Perf} from './types';
 
 const FACTOR = 500000;
-const SALT = '674243647f1c355da8607a8cdda05120d79ca5d1af8b3b49359d056a0a82';
-const PHRASE = '6e2a53dbc7d307970d7ba3c0000221722cb74f1c325137251ce8fa5c2240';
-
-const config: PoWConfig = {
-  string: PHRASE,
-  difficulty_factor: 1,
-  salt: SALT,
-};
-
-type Perf = {
-  difficulty: Number;
-  time: Number;
-};
-
+const worker = new Worker('bench.js');
 const res: Array<Perf> = [];
-
 const stats = document.getElementById('stats');
 
-const addResult = (difficulty: Number, time: Number) => {
+const addResult = (perf: Perf) => {
   const row = document.createElement('tr');
   row.className = 'data';
   const diff = document.createElement('td');
-  diff.innerHTML = difficulty.toString();
+  diff.innerHTML = perf.difficulty.toString();
   const duration = document.createElement('td');
-  duration.innerHTML = time.toString();
+  duration.innerHTML = perf.time.toString();
 
   row.appendChild(diff);
   row.appendChild(duration);
 
   stats.appendChild(row);
 
-  res.push({difficulty, time});
+  res.push(perf);
 };
 
 const addDeviceInfo = () => {
@@ -78,27 +58,31 @@ const addDeviceInfo = () => {
   document.getElementById('device-info').appendChild(element);
 };
 
-document.getElementById('start').addEventListener('click', e => run(e));
+const finished = () => {
+  const s = document.getElementById('status');
+  s.innerHTML = 'Benchmark finished';
+};
 
 const run = (e: Event) => {
   e.preventDefault();
   document.getElementById('pre-bench').style.display = 'none';
   document.getElementById('bench').style.display = 'flex';
 
-  for (let i = 1; i < 10; i++) {
+  const iterations = 9;
+  worker.onmessage = (event: MessageEvent) => {
+    let data: Perf = event.data;
+    addResult(data);
+    if (res.length == iterations) {
+      finished();
+    }
+  };
+
+  for (let i = 1; i <= iterations; i++) {
     let difficulty_factor = i * FACTOR;
-    config.difficulty_factor = difficulty_factor;
-
-    const t0 = performance.now();
-    gen_pow(config.salt, config.string, config.difficulty_factor);
-    const t1 = performance.now();
-    const time = t1 - t0;
-
-    addResult(difficulty_factor, time);
+    worker.postMessage(difficulty_factor);
   }
 
   addDeviceInfo();
-
-  const s = document.getElementById('status');
-  s.innerHTML = 'Benchmark finished';
 };
+
+document.getElementById('start').addEventListener('click', e => run(e));

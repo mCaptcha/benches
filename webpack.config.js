@@ -8,6 +8,7 @@ module.exports = {
   //mode: 'production',
   entry: {
     bundle: './src/index.ts',
+    bench: './src/bench.ts',
   },
   output: {
     filename: '[name].js',
