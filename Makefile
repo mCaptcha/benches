@@ -1,3 +1,3 @@
 default:
-	yarn build
-	cp ./static/index.html dist/
+	@yarn build
+	@cp ./static/* dist/
