@@ -78,19 +78,27 @@ const addDeviceInfo = () => {
   document.getElementById('device-info').appendChild(element);
 };
 
-for (let i = 1; i < 10; i++) {
-  let difficulty_factor = i * FACTOR;
-  config.difficulty_factor = difficulty_factor;
+document.getElementById('start').addEventListener('click', e => run(e));
 
-  const t0 = performance.now();
-  gen_pow(config.salt, config.string, config.difficulty_factor);
-  const t1 = performance.now();
-  const time = t1 - t0;
+const run = (e: Event) => {
+  e.preventDefault();
+  document.getElementById('pre-bench').style.display = 'none';
+  document.getElementById('bench').style.display = 'flex';
 
-  addResult(difficulty_factor, time);
-}
+  for (let i = 1; i < 10; i++) {
+    let difficulty_factor = i * FACTOR;
+    config.difficulty_factor = difficulty_factor;
 
-addDeviceInfo();
+    const t0 = performance.now();
+    gen_pow(config.salt, config.string, config.difficulty_factor);
+    const t1 = performance.now();
+    const time = t1 - t0;
 
-const s = document.getElementById('status');
-s.innerHTML = 'Benchmark finished';
+    addResult(difficulty_factor, time);
+  }
+
+  addDeviceInfo();
+
+  const s = document.getElementById('status');
+  s.innerHTML = 'Benchmark finished';
+};
