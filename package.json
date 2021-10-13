@@ -7,6 +7,7 @@
   "private": true,
   "scripts": {
     "build": "webpack --mode production",
+    "lint": "eslint src",
     "start": "webpack-dev-server --mode development --progress --color",
     "test": "jest"
   },
@@ -15,7 +16,10 @@
     "@types/jsdom": "^16.2.10",
     "@types/node": "^16.10.4",
     "@types/sinon": "^10.0.4",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
     "@wasm-tool/wasm-pack-plugin": "^1.6.0",
+    "eslint": "^8.0.0",
     "jest": "^27.2.5",
     "jest-fetch-mock": "^3.0.3",
     "jsdom": "^18.0.0",

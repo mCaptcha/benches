@@ -8,8 +8,8 @@
  * this program. If not, see <https://spdx.org/licenses/MIT.html> for
  * MIT or <http://www.apache.org/licenses/LICENSE-2.0> for Apache.
  */
-import {gen_pow} from 'mcaptcha-browser';
-import {Perf} from './types';
+import {gen_pow} from "mcaptcha-browser";
+import {Perf} from "./types";
 
 type PoWConfig = {
   string: string;
@@ -17,8 +17,8 @@ type PoWConfig = {
   salt: string;
 };
 
-const SALT = '674243647f1c355da8607a8cdda05120d79ca5d1af8b3b49359d056a0a82';
-const PHRASE = '6e2a53dbc7d307970d7ba3c0000221722cb74f1c325137251ce8fa5c2240';
+const SALT = "674243647f1c355da8607a8cdda05120d79ca5d1af8b3b49359d056a0a82";
+const PHRASE = "6e2a53dbc7d307970d7ba3c0000221722cb74f1c325137251ce8fa5c2240";
 
 const config: PoWConfig = {
   string: PHRASE,
@@ -26,11 +26,11 @@ const config: PoWConfig = {
   salt: SALT,
 };
 
-console.debug('worker registered');
+console.debug("worker registered");
 
 onmessage = function(event) {
-  console.debug('message received at worker');
-  let difficulty_factor = parseInt(event.data);
+  console.debug("message received at worker");
+  const difficulty_factor = parseInt(event.data);
   config.difficulty_factor = difficulty_factor;
 
   const t0 = performance.now();
@@ -38,7 +38,7 @@ onmessage = function(event) {
   const t1 = performance.now();
   const time = t1 - t0;
 
-  let msg: Perf = {
+  const msg: Perf = {
     difficulty: difficulty_factor,
     time: time,
   };
