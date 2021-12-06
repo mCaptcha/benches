@@ -33,6 +33,6 @@
     "webpack-dev-server": "^4.3.1"
   },
   "dependencies": {
-    "mcaptcha-browser": "./vendor/pow/"
+    "@mcaptcha/pow-wasm": "^0.1.0-alpha-1"
   }
 }
