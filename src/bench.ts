@@ -8,8 +8,9 @@
  * this program. If not, see <https://spdx.org/licenses/MIT.html> for
  * MIT or <http://www.apache.org/licenses/LICENSE-2.0> for Apache.
  */
-import {gen_pow} from "@mcaptcha/pow-wasm"
-import {Perf} from "./types";
+import { gen_pow } from "@mcaptcha/pow-wasm";
+import { generate_work } from "@mcaptcha/pow_sha256-polyfill";
+import { Perf } from "./types";
 
 type PoWConfig = {
   string: string;
@@ -28,19 +29,26 @@ const config: PoWConfig = {
 
 console.debug("worker registered");
 
-onmessage = function(event) {
+onmessage = async function (event) {
   console.debug("message received at worker");
   const difficulty_factor = parseInt(event.data);
   config.difficulty_factor = difficulty_factor;
 
-  const t0 = performance.now();
+  const wt0 = performance.now();
   gen_pow(config.salt, config.string, config.difficulty_factor);
-  const t1 = performance.now();
-  const time = t1 - t0;
+  const wt1 = performance.now();
+  const wtime = wt1 - wt0;
+
+  const jt0 = performance.now();
+  await generate_work(config.salt, config.string, config.difficulty_factor);
+  const jt1 = performance.now();
+  const jtime = jt1 - jt0;
 
   const msg: Perf = {
     difficulty: difficulty_factor,
-    time: time,
+    wasm_time: wtime,
+    js_time: jtime,
   };
+
   postMessage(msg);
 };

@@ -11,5 +11,6 @@
 
 export type Perf = {
   difficulty: Number;
-  time: Number;
+  wasm_time: Number;
+  js_time: Number;
 };

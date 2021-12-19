@@ -20,11 +20,14 @@ const addResult = (perf: Perf) => {
   row.className = "data";
   const diff = document.createElement("td");
   diff.innerHTML = perf.difficulty.toString();
-  const duration = document.createElement("td");
-  duration.innerHTML = perf.time.toString();
+  const Wasmduration = document.createElement("td");
+  Wasmduration.innerHTML = perf.wasm_time.toString();
+  const JSduration = document.createElement("td");
+  Wasmduration.innerHTML = perf.js_time.toString();
 
   row.appendChild(diff);
-  row.appendChild(duration);
+  row.appendChild(Wasmduration);
+  row.appendChild(JSduration);
 
   stats.appendChild(row);
 
